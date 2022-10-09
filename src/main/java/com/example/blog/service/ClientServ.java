@@ -1,13 +1,14 @@
 package com.example.blog.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.example.blog.model.Address;
 import com.example.blog.model.Client;
-import com.example.blog.model.Company;
 import com.example.blog.repositary.AddressRepo;
 import com.example.blog.repositary.ClientRepo;
 import com.example.blog.repositary.CompanyRepo;
@@ -24,9 +25,13 @@ public class ClientServ {
    
 
     public Client create(Client client) {
-        client.setCompany(companyRepo.save(client.getCompany()));
-        client.setAddress(addressRepo.save(client.getAddress()));
-        return clientRepo.save(client);
+        try {
+            client.setCompany(companyRepo.save(client.getCompany()));
+            client.setAddress(addressRepo.save(client.getAddress()));
+            return clientRepo.save(client);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     public Iterable<Client> read() {
@@ -36,7 +41,21 @@ public class ClientServ {
     public Client read(int id) {
         try {
             return clientRepo.findById(id).get();
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public Client update(Client client) {
+        try {
+            clientRepo.findById(client.getId()).get();
+            client.setCompany(companyRepo.save(client.getCompany()));
+            client.setAddress(addressRepo.save(client.getAddress()));
+            return clientRepo.save(client);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
