@@ -66,8 +66,10 @@ public class ClientServ {
 
     public String delete(int id) {
         try {
-            clientRepo.findById(id).get();
+            Client client = clientRepo.findById(id).get();
             clientRepo.deleteById(id);
+            addressRepo.deleteById(client.getAddress().getId());
+            companyRepo.deleteById(client.getCompany().getId());
             return null;
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
