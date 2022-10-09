@@ -46,17 +46,18 @@ public class ClientServ {
         }
     }
 
-    public Client update(Client client) {
+    public Client update(Client client,int id) {
         try {
-            clientRepo.findById(client.getId()).get();
+            clientRepo.findById(id).get();
             client.setCompany(companyRepo.save(client.getCompany()));
             client.setAddress(addressRepo.save(client.getAddress()));
             return clientRepo.save(client);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -17,6 +17,7 @@ public class Client {
     private String name;
     @Column(nullable = false)
     private String username;
+    @Column(nullable = false,unique = true)
     private String email;
     private String phone;
     private String website;
