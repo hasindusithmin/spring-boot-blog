@@ -2,6 +2,7 @@ package com.example.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,11 @@ public class ClientCont {
     @GetMapping
     public Iterable<Client> read() {
         return clientServ.read();
+    }
+
+    @GetMapping("/{id}")
+    public Client read(@PathVariable int id) {
+        return clientServ.read(id);
     }
 
     @PostMapping
