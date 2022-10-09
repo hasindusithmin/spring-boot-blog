@@ -59,6 +59,19 @@ public class ClientServ {
         catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public String delete(int id) {
+        try {
+            clientRepo.findById(id).get();
+            clientRepo.deleteById(id);
+            return null;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
 
