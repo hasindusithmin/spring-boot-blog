@@ -30,13 +30,14 @@ public class ClientContTest {
 
 
    @Test
-   void readAll() throws Exception{
+   void testreadAll() throws Exception{
     RestTemplate restTemplate = new RestTemplate();
     final String uri = "http://localhost:"+randomServerPort+"/blog";
     ResponseEntity<Client[]> response = restTemplate.getForEntity(uri ,Client[].class);
     Client[] clientsInBody =  response.getBody();
     List<Client> clientsInDb = new ArrayList<Client>();
     clientServ.read().forEach(clientsInDb::add);
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
     assertEquals(clientsInBody.length, clientsInDb.size());
     for(int i = 0; i < clientsInBody.length;i++) {
         assertEquals(clientsInBody[i].getId(), clientsInDb.get(i).getId());
@@ -54,6 +55,28 @@ public class ClientContTest {
 
     }
 
+   }
+
+   @Test
+   void testReadOneExists() {
+    RestTemplate restTemplate = new RestTemplate();
+    final String uri = "http://localhost:"+randomServerPort+"/blog/2";
+    ResponseEntity<Client> response =  restTemplate.getForEntity(uri, Client.class);
+    assertEquals(response.getStatusCode(), HttpStatus.OK);
+    Client clientInBd =  response.getBody();
+    Client clientInDb = clientServ.read(2);
+    assertEquals(clientInBd.getId(), clientInDb.getId());
+    assertEquals(clientInBd.getName(), clientInDb.getName());
+    assertEquals(clientInBd.getUsername(), clientInDb.getUsername());
+    assertEquals(clientInBd.getWebsite(), clientInDb.getWebsite());
+    assertEquals(clientInBd.getPhone(), clientInDb.getPhone());
+    assertEquals(clientInBd.getAddress().getCity(), clientInDb.getAddress().getCity());
+    assertEquals(clientInBd.getAddress().getStreet(), clientInDb.getAddress().getStreet());
+    assertEquals(clientInBd.getAddress().getSuite(), clientInDb.getAddress().getSuite());
+    assertEquals(clientInBd.getAddress().getZipcode(), clientInDb.getAddress().getZipcode());
+    assertEquals(clientInBd.getCompany().getName(), clientInDb.getCompany().getName());
+    assertEquals(clientInBd.getCompany().getBs(), clientInDb.getCompany().getBs());
+    assertEquals(clientInBd.getCompany().getCatchPhrase(), clientInDb.getCompany().getCatchPhrase());
    }
     
 }
