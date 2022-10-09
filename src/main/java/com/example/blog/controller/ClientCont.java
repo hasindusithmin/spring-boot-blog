@@ -36,9 +36,9 @@ public class ClientCont {
         return clientServ.create(client);
     }
 
-    @PutMapping("/{id}")
-    public Client update(@PathVariable("id") int id,@RequestBody Client client) {
-        return clientServ.update(client,id);
+    @PutMapping()
+    public Client update(@RequestBody Client client) {
+        return clientServ.update(client);
     }
 
     @DeleteMapping("/{id}")

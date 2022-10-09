@@ -46,11 +46,11 @@ public class ClientServ {
         }
     }
 
-    public Client update(Client client,int id) {
+    public Client update(Client client) {
         try {
-            clientRepo.findById(id).get();
-            client.setCompany(companyRepo.save(client.getCompany()));
-            client.setAddress(addressRepo.save(client.getAddress()));
+            clientRepo.findById(client.getId()).get();
+            client.setAddress(addressRepo.save(client.getAddress()));;
+            client.setCompany(companyRepo.save(client.getCompany()));;
             return clientRepo.save(client);
         }
         catch (NoSuchElementException e) {
